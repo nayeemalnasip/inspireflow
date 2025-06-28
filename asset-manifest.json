@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/inspireflow/static/css/main.abaadb74.css",
+    "main.js": "/inspireflow/static/js/main.7c7d465c.js",
+    "static/js/453.a72ba988.chunk.js": "/inspireflow/static/js/453.a72ba988.chunk.js",
+    "index.html": "/inspireflow/index.html",
+    "main.abaadb74.css.map": "/inspireflow/static/css/main.abaadb74.css.map",
+    "main.7c7d465c.js.map": "/inspireflow/static/js/main.7c7d465c.js.map",
+    "453.a72ba988.chunk.js.map": "/inspireflow/static/js/453.a72ba988.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.abaadb74.css",
+    "static/js/main.7c7d465c.js"
+  ]
+}
