@@ -12,6 +12,7 @@
   transition: all 0.4s ease;
   font-family: 'Share Tech Mono', monospace;
   color: #00ff00;
+  box-sizing: border-box;
 }
 
 @keyframes panelAppear {
@@ -68,34 +69,58 @@ input[type="password"] {
   border-radius: 8px;
   font-size: 1rem;
   outline: none;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   caret-color: #00ff00;
   box-sizing: border-box;
   width: 100%;
   font-family: 'Share Tech Mono', monospace;
 }
 
-input[type="text"]:hover,
-input[type="email"]:hover,
-input[type="password"]:hover {
+input:hover {
   background: rgba(0, 255, 0, 0.02);
-  box-shadow:
-    0 0 8px #00ff00,
-    0 0 15px #00ff00,
-    0 0 20px #00ff00;
+  box-shadow: 0 0 8px #00ff00, 0 0 15px #00ff00;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
+input:focus {
   background: rgba(0, 255, 0, 0.08);
-  box-shadow:
-    0 0 12px #00ff00,
-    0 0 25px #00ff00,
-    0 0 35px #00ff00;
+  box-shadow: 0 0 12px #00ff00, 0 0 25px #00ff00;
   border-color: #00ff00;
 }
 
+/* Password Toggle (inside input field) */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  padding: 4px;
+  z-index: 2;
+}
+
+.eye-icon {
+  width: 22px;
+  height: 22px;
+  stroke: #00ff00;
+  transition: stroke 0.3s, transform 0.3s;
+}
+
+.password-toggle-btn:hover .eye-icon {
+  stroke: #33ff33;
+  transform: scale(1.1);
+}
+
+/* Button */
 button.btn-glow {
   background: linear-gradient(90deg, #00ff00, #00ffaa);
   color: black;
@@ -103,9 +128,7 @@ button.btn-glow {
   padding: 14px 0;
   border: none;
   border-radius: 8px;
-  box-shadow:
-    0 0 15px #00ff00,
-    inset 0 0 12px #004400;
+  box-shadow: 0 0 15px #00ff00, inset 0 0 12px #004400;
   cursor: pointer;
   width: 100%;
   user-select: none;
@@ -120,10 +143,7 @@ button.btn-glow {
 
 button.btn-glow:hover {
   transform: scale(1.04);
-  box-shadow:
-    0 0 25px #00ff00,
-    0 0 50px #00ff00,
-    inset 0 0 20px #002200;
+  box-shadow: 0 0 25px #00ff00, 0 0 50px #00ff00, inset 0 0 20px #002200;
 }
 
 button.btn-glow::after {
@@ -190,9 +210,7 @@ button.btn-glow:active::after {
     border-radius: 12px;
   }
 
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
+  input,
   button.btn-glow {
     font-size: 0.95rem;
     min-height: 48px;
@@ -201,4 +219,24 @@ button.btn-glow:active::after {
   .title {
     font-size: 1.4rem;
   }
+}
+.password-strength {
+  font-size: 0.9rem;
+  text-align: left;
+  margin-top: -10px;
+  margin-bottom: -10px;
+  font-weight: 600;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.password-strength.weak {
+  color: red;
+}
+
+.password-strength.medium {
+  color: yellow;
+}
+
+.password-strength.strong {
+  color: lime;
 }

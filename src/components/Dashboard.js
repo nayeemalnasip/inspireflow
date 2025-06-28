@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import './Dashboard.css';
 
 const defaultTasks = [
@@ -21,58 +22,74 @@ const defaultTasks = [
 ];
 
 const Dashboard = () => {
+  const { user, logout } = useContext(AuthContext);
   const [tasks, setTasks] = useState(defaultTasks);
   const [points, setPoints] = useState(0);
   const [newTask, setNewTask] = useState('');
   const [undoStack, setUndoStack] = useState(null);
   const undoTimeoutRef = useRef(null);
 
-  // Undo timer cleanup
   useEffect(() => {
     return () => clearTimeout(undoTimeoutRef.current);
   }, []);
 
-  // Toggle task completion
-  const toggleDone = (id) => {
+  const undoAction = useCallback(() => {
+    if (!undoStack) return;
+    const { action, task, prevDone } = undoStack;
+    let newTasks, newPoints;
+
+    if (action === 'delete') {
+      newTasks = [...tasks, task].sort((a, b) => a.id - b.id);
+      newPoints = task.done ? points + 10 : points;
+    } else if (action === 'toggle') {
+      newTasks = tasks.map(t =>
+        t.id === task.id ? { ...t, done: prevDone } : t
+      );
+      newPoints = points + (prevDone ? 10 : -10);
+    }
+
+    setTasks(newTasks);
+    setPoints(newPoints);
+    setUndoStack(null);
+    clearTimeout(undoTimeoutRef.current);
+  }, [undoStack, tasks, points]);
+
+  const toggleDone = useCallback((id) => {
     setTasks(prevTasks => {
-      let updatedTask;
       const newTasks = prevTasks.map(t => {
         if (t.id === id) {
-          updatedTask = { ...t, done: !t.done };
+          const updatedTask = { ...t, done: !t.done };
+          const prevDone = t.done;
+          const newPoints = points + (prevDone ? -10 : 10);
+
+          setPoints(newPoints);
+          setUndoStack({ action: 'toggle', task: updatedTask, prevDone });
+          clearTimeout(undoTimeoutRef.current);
+          undoTimeoutRef.current = setTimeout(() => setUndoStack(null), 5000);
+
           return updatedTask;
         }
         return t;
       });
-
-      if (updatedTask) {
-        const prevDone = !updatedTask.done;
-        const newPoints = points + (prevDone ? -10 : 10);
-        setPoints(newPoints);
-        setUndoStack({ action: 'toggle', task: updatedTask, prevDone });
-        clearTimeout(undoTimeoutRef.current);
-        undoTimeoutRef.current = setTimeout(() => setUndoStack(null), 5000);
-      }
-
       return newTasks;
     });
-  };
+  }, [points]);
 
-  // Add a new task
   const addTask = () => {
     if (newTask.trim() === '') return;
     const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
     const taskObj = { id: newId, task: newTask.trim(), done: false };
-    const newTasks = [...tasks, taskObj];
-    setTasks(newTasks);
+    setTasks([...tasks, taskObj]);
     setNewTask('');
   };
 
-  // Delete a task
   const deleteTask = (id) => {
     const taskToDelete = tasks.find(t => t.id === id);
     if (!taskToDelete) return;
+
     const newTasks = tasks.filter(t => t.id !== id);
     const newPoints = taskToDelete.done ? points - 10 : points;
+
     setTasks(newTasks);
     setPoints(newPoints);
     setUndoStack({ action: 'delete', task: taskToDelete });
@@ -80,28 +97,10 @@ const Dashboard = () => {
     undoTimeoutRef.current = setTimeout(() => setUndoStack(null), 5000);
   };
 
-  // Undo last action
-  const undoAction = () => {
-    if (!undoStack) return;
-    if (undoStack.action === 'delete') {
-      const newTasks = [...tasks, undoStack.task].sort((a, b) => a.id - b.id);
-      const newPoints = undoStack.task.done ? points + 10 : points;
-      setTasks(newTasks);
-      setPoints(newPoints);
-    } else if (undoStack.action === 'toggle') {
-      const newTasks = tasks.map(t =>
-        t.id === undoStack.task.id ? { ...t, done: undoStack.prevDone } : t
-      );
-      const newPoints = points + (undoStack.prevDone ? 10 : -10);
-      setTasks(newTasks);
-      setPoints(newPoints);
-    }
-    setUndoStack(null);
-    clearTimeout(undoTimeoutRef.current);
-  };
-
   const completedCount = tasks.filter(t => t.done).length;
   const progress = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
+  const displayName = user?.displayName || user?.email;
 
   return (
     <div className="dashboard-wrapper">
@@ -116,10 +115,8 @@ const Dashboard = () => {
               &#9432;
             </a>
           </nav>
-          <h1>Welcome</h1>
-          <button className="logout-btn">
-            Logout
-          </button>
+          <h1>Welcome, {displayName}</h1>
+          <button onClick={logout} className="logout-btn">Logout</button>
         </div>
 
         <h2>Your Daily Tasks</h2>

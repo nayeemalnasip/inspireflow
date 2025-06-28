@@ -1,3 +1,4 @@
+/* Background container */
 .bg-container {
   min-height: 100vh;
   background: radial-gradient(ellipse at center, #010101 0%, #000c04 100%);
@@ -10,11 +11,12 @@
   box-sizing: border-box;
 }
 
+/* Panel frame */
 .frame {
   position: relative;
   padding: 40px 30px;
   border-radius: 16px;
-  max-width: 400px;
+  max-width: 420px;
   width: 100%;
   background: rgba(0, 255, 0, 0.05);
   border: 2px solid rgba(0, 255, 0, 0.6);
@@ -25,6 +27,7 @@
   box-sizing: border-box;
 }
 
+/* Animation */
 @keyframes panelAppear {
   0% {
     transform: scale(0.2);
@@ -38,11 +41,12 @@
   }
 }
 
+/* Title styling */
 .title {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   color: #00ff00;
   text-align: center;
-  text-shadow: 0 0 10px #00ff00;
+  text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
   animation: flicker 2.5s infinite ease-in-out;
   margin-bottom: 24px;
   letter-spacing: 2px;
@@ -52,102 +56,81 @@
   0%, 100% {
     opacity: 1;
     text-shadow:
-      0 0 5px #00ff00,
       0 0 10px #00ff00,
       0 0 20px #00ff00,
+      0 0 30px #00ff00,
       0 0 40px #00ff00;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
     text-shadow: none;
   }
 }
 
+/* Form layout */
 .form-section {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/* Input fields */
 input[type="text"],
 input[type="password"],
 input[type="email"] {
   background: transparent;
   border: 2px solid #00ff00;
   color: #00ff00;
-  padding: 14px 18px;
-  border-radius: 8px;
+  padding: 16px 20px;
+  border-radius: 12px;
   font-size: 1rem;
   outline: none;
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
   caret-color: #00ff00;
-  box-sizing: border-box;
   width: 100%;
-  position: relative;
-  z-index: 0;
   font-family: 'Share Tech Mono', monospace;
+  box-sizing: border-box;
 }
 
-input[type="text"]:hover,
-input[type="password"]:hover,
-input[type="email"]:hover {
+input:hover {
   background: rgba(0, 255, 0, 0.02);
-  box-shadow:
-    0 0 8px #00ff00,
-    0 0 15px #00ff00,
-    0 0 20px #00ff00;
+  box-shadow: 0 0 12px #00ff00, 0 0 25px #00ff00, 0 0 35px #00ff00;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus {
+input:focus {
   background: rgba(0, 255, 0, 0.08);
-  box-shadow:
-    0 0 12px #00ff00,
-    0 0 25px #00ff00,
-    0 0 35px #00ff00;
+  box-shadow: 0 0 18px #00ff00, 0 0 30px #00ff00, 0 0 45px #00ff00;
   border-color: #00ff00;
-  outline-offset: 2px;
-  outline: none;
 }
 
+/* Button styles */
 button.btn-glow {
   background: linear-gradient(90deg, #00ff00, #00ffaa);
-  border: none;
-  padding: 12px 24px;
-  font-weight: 700;
-  cursor: pointer;
   color: black;
-  user-select: none;
-  margin-top: 12px;
-  border-radius: 8px;
-  box-shadow:
-    0 0 8px #00cc00,
-    inset 0 0 6px #004400;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
+  font-weight: 700;
+  padding: 16px 0;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #00cc00, inset 0 0 15px #004400;
   width: 100%;
   font-family: 'Share Tech Mono', monospace;
   text-transform: uppercase;
   letter-spacing: 1.2px;
+  cursor: pointer;
+  position: relative;
   z-index: 0;
+  transition: all 0.4s ease;
 }
 
 button.btn-glow:hover {
-  transform: scale(1.04);
-  box-shadow:
-    0 0 15px #00cc00,
-    0 0 30px #00cc00,
-    inset 0 0 12px #002200;
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00cc00, 0 0 50px #00cc00, inset 0 0 20px #002200;
 }
 
 button.btn-glow:focus {
   outline: 2px solid #00ff00;
   outline-offset: 3px;
-  box-shadow:
-    0 0 20px #00ff00,
-    inset 0 0 10px #002200;
+  box-shadow: 0 0 20px #00ff00, inset 0 0 10px #002200;
 }
 
 button.btn-glow::after {
@@ -170,25 +153,61 @@ button.btn-glow:active::after {
   transition: transform 0s;
 }
 
+/* Password field container */
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 48px;
+}
+
+/* Password toggle inside input */
+.password-toggle-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 2;
+  padding: 4px;
+}
+
+.eye-icon {
+  width: 22px;
+  height: 22px;
+  stroke: #00ff00;
+  transition: transform 0.3s ease, stroke 0.3s ease;
+}
+
+.password-toggle-btn:hover .eye-icon {
+  transform: scale(1.1);
+  stroke: #33ff33;
+}
+
+/* Errors */
 .error-msg {
   color: #ff4c4c;
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
   font-weight: 600;
   margin-bottom: 12px;
+  animation: errorShake 0.5s ease-in-out;
 }
 
-.reset-msg {
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 18px;
-  user-select: none;
-  font-family: 'Share Tech Mono', monospace;
-  color: lime;
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25%, 75% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
 }
 
+/* Switch text */
 .switch-text {
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-align: center;
   color: #00ff00;
   margin-top: 18px;
@@ -205,43 +224,41 @@ button.btn-glow:active::after {
   color: #aaffaa;
 }
 
-.input-glow {
-  box-shadow: 0 0 8px #00ff00;
-  border-color: #00ff00;
-}
-
+/* Shake */
 .shake {
   animation: shakeX 0.5s ease;
-}
-
-@keyframes shakeX {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-8px); }
-  40%, 80% { transform: translateX(8px); }
 }
 
 /* Responsive */
 @media (max-width: 480px) {
   .frame {
-    padding: 24px 18px;
+    padding: 24px 16px;
+    max-width: 95%;
     border-radius: 12px;
   }
 
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
+  .title {
+    font-size: 1.4rem;
+  }
+
+  input,
   button.btn-glow {
     font-size: 0.95rem;
     min-height: 48px;
-  }
-
-  .title {
-    font-size: 1.3rem;
   }
 
   .switch-text,
   .reset-msg,
   .error-msg {
     font-size: 0.85rem;
+  }
+
+  .password-toggle-btn {
+    right: 12px;
+  }
+
+  .eye-icon {
+    width: 20px;
+    height: 20px;
   }
 }

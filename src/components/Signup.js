@@ -1,31 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile
+} from "firebase/auth";
 import "./Signup.css";
 
-const containerVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: "easeOut" } },
-  exit: { opacity: 0, y: -40, scale: 0.95, transition: { duration: 0.4, ease: "easeIn" } }
-};
-
-const buttonVariants = {
-  hover: {
-    scale: 1.1,
-    boxShadow: "0 0 12px #00ff00",
-    transition: { yoyo: Infinity, duration: 0.6 }
-  },
-  tap: {
-    scale: 0.95
-  }
-};
-
-const inputVariants = {
-  focus: {
-    boxShadow: "0 0 12px #00ff00",
-    borderColor: "#00ff00",
-    transition: { duration: 0.3 }
-  }
-};
 
 const Signup = ({ switchToLogin }) => {
   const [fullName, setFullName] = useState("");
@@ -33,119 +14,173 @@ const Signup = ({ switchToLogin }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [focusedInput, setFocusedInput] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("");
 
-  const validateEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
+  const toggleShowPassword = () => setShowPassword((prev) => !prev);
+
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
+  const checkPasswordStrength = (pass) => {
+    if (pass.length === 0) return "";
+    if (pass.length < 6) return "Weak";
+    if (pass.length < 12) return "Medium";
+    return "Strong";
   };
 
-  const handleSubmit = (e) => {
+  const handlePasswordChange = (e) => {
+    const val = e.target.value;
+    setPassword(val);
+    setPasswordStrength(checkPasswordStrength(val));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
-    if (!fullName.trim() || !email.trim() || !password || !confirmPassword) {
+    if (!fullName || !email || !password || !confirmPassword) {
       setError("Please fill in all the fields.");
+      setLoading(false);
       return;
     }
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
-    // Local signup logic (instead of Firebase signup)
-    // In a real application, this would typically involve adding the user to your backend/database
-    console.log("User signed up successfully:", { fullName, email, password });
-    // For now, simulate a successful signup:
-    alert("Signup successful!");
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // ✅ Set display name to Firebase user
+      await updateProfile(userCredential.user, {
+        displayName: fullName,
+      });
+
+      // Optional: Confirm update with log
+      console.log("User created with name:", userCredential.user.displayName);
+
+      alert("Signup successful!");
+
+      // Reset form
+      setFullName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setPasswordStrength("");
+
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+    }
+
+    setLoading(false);
   };
 
   return (
-    <motion.div
-      className="frame"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
-      <motion.h2
-        className="title flicker"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+    <div className="bg-container">
+      <motion.div
+        className="frame"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
       >
-        SIGN UP TO CONTROL PANEL
-      </motion.h2>
-
-      {error && <p className="error-msg shake">{error}</p>}
-
-      <form onSubmit={handleSubmit} noValidate className="form-section">
-        <motion.input
-          type="text"
-          placeholder="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          onFocus={() => setFocusedInput("fullName")}
-          onBlur={() => setFocusedInput(null)}
-          variants={inputVariants}
-          animate={focusedInput === "fullName" ? "focus" : ""}
-          required
-        />
-        <motion.input
-          type="email"
-          placeholder="Email Address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          onFocus={() => setFocusedInput("email")}
-          onBlur={() => setFocusedInput(null)}
-          variants={inputVariants}
-          animate={focusedInput === "email" ? "focus" : ""}
-          required
-        />
-        <motion.input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onFocus={() => setFocusedInput("password")}
-          onBlur={() => setFocusedInput(null)}
-          variants={inputVariants}
-          animate={focusedInput === "password" ? "focus" : ""}
-          required
-        />
-        <motion.input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          onFocus={() => setFocusedInput("confirmPassword")}
-          onBlur={() => setFocusedInput(null)}
-          variants={inputVariants}
-          animate={focusedInput === "confirmPassword" ? "focus" : ""}
-          required
-        />
-        <motion.button
-          type="submit"
-          className="btn-glow"
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="tap"
+        <motion.h2
+          className="title flicker"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
         >
-          SIGN UP
-        </motion.button>
-      </form>
+          SIGN UP TO CONTROL PANEL
+        </motion.h2>
 
-      <p className="switch-text">
-        Already have an account?{" "}
-        <span onClick={switchToLogin} className="switch-link">
-          Login
-        </span>
-      </p>
-    </motion.div>
+        {error && <p className="error-msg shake">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="form-section">
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
+          />
+
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <div className="password-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+            <span className="password-toggle-btn" onClick={toggleShowPassword}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="eye-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#00ff00"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {showPassword ? (
+                  <>
+                    <path d="M17.94 17.94 6.06 6.06" />
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                  </>
+                ) : (
+                  <>
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                  </>
+                )}
+              </svg>
+            </span>
+          </div>
+
+          {passwordStrength && (
+            <p className={`password-strength ${passwordStrength.toLowerCase()}`}>
+              {passwordStrength}
+            </p>
+          )}
+
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit" className="btn-glow" disabled={loading}>
+            {loading ? "Signing up..." : "SIGN UP"}
+          </button>
+        </form>
+
+        <p className="switch-text">
+          Already have an account?{" "}
+          <span onClick={switchToLogin} className="switch-link">
+            Login
+          </span>
+        </p>
+      </motion.div>
+    </div>
   );
 };
 

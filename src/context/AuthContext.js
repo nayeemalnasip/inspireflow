@@ -1,5 +1,6 @@
-// src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from "react";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "firebase/auth"; // Firebase auth functions
+import { auth } from "../firebase"; // Firebase auth instance
 
 export const AuthContext = createContext();
 
@@ -8,47 +9,57 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Attempt to load user from local storage
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    // Firebase auth স্টেট চেঞ্জ হলে শোনার জন্য
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Login function (local implementation)
-  const login = (email, password) => {
-    if (email === "test@example.com" && password === "password") {
-      const loggedInUser = { email };
-      localStorage.setItem("user", JSON.stringify(loggedInUser));
-      setUser(loggedInUser);
+  // Firebase সাইন আপ ফাংশন
+  const signup = async (email, password) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      setUser(userCredential.user);
       return true;
+    } catch (error) {
+      console.error("Signup error:", error.message);
+      return false;
     }
-    return false;
   };
 
-  // Signup function (local implementation)
-  const signup = (email, password) => {
-    if (email && password) {
-      // Simulate successful signup
-      const newUser = { email };
-      localStorage.setItem("user", JSON.stringify(newUser));
-      setUser(newUser);
+  // Firebase লগইন ফাংশন
+  const login = async (email, password) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      setUser(userCredential.user);
       return true;
+    } catch (error) {
+      console.error("Login error:", error.message);
+      return false;
     }
-    return false;
   };
 
-  // Logout function (local implementation)
-  const logout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
+  // Firebase লগআউট ফাংশন
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Logout error:", error.message);
+    }
   };
 
-  // Reset Password (local simulation)
-  const resetPassword = (email) => {
-    // Simulate password reset
-    return email ? { success: true } : { success: false, error: "Invalid email" };
+  // Firebase পাসওয়ার্ড রিসেট ফাংশন
+  const resetPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return { success: true, message: "Password reset email sent!" };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   };
 
   if (loading) {

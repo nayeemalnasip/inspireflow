@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import './Login.css';
 
 const Login = ({ switchToSignup }) => {
@@ -9,17 +11,20 @@ const Login = ({ switchToSignup }) => {
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
   const [inputFocus, setInputFocus] = useState({ email: false, password: false });
-
   const [forgotMode, setForgotMode] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetMsg, setResetMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const triggerShake = () => {
     setShake(true);
     setTimeout(() => setShake(false), 500);
   };
 
-  // Login submit handler
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
@@ -28,20 +33,20 @@ const Login = ({ switchToSignup }) => {
       triggerShake();
       return;
     }
-    // Implement the login functionality here (for example, using a local authentication method)
-    if (email !== "test@example.com" || password !== "password") {
-      setError('Invalid email or password');
-      triggerShake();
-    } else {
-      // Proceed with login success
-      console.log("Logged in successfully!");
-    }
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("Logged in successfully:", user);
+      })
+      .catch(() => {
+        setError('Invalid email or password');
+        triggerShake();
+      });
   };
 
-  // Forgot password submit handler
   const handleResetSubmit = (e) => {
     e.preventDefault();
-    setResetMsg('');
     if (!resetEmail.trim()) {
       setResetMsg('Please enter your email address.');
       return;
@@ -81,14 +86,8 @@ const Login = ({ switchToSignup }) => {
           {forgotMode ? 'Reset Password' : 'LOGIN TO CONTROL PANEL'}
         </motion.h2>
 
-        {/* Error & Reset messages */}
         {!forgotMode && error && hovered && (
-          <motion.p
-            className="error-msg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.p className="error-msg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
             {error}
           </motion.p>
         )}
@@ -125,21 +124,35 @@ const Login = ({ switchToSignup }) => {
                 onBlur={() => setInputFocus({ ...inputFocus, email: false })}
                 className={inputFocus.email ? 'input-glow' : ''}
               />
-              <motion.input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setInputFocus({ ...inputFocus, password: true })}
-                onBlur={() => setInputFocus({ ...inputFocus, password: false })}
-                className={inputFocus.password ? 'input-glow' : ''}
-              />
-              <motion.button
-                type="submit"
-                className="btn-glow"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+
+              <motion.div className="password-container">
+                <motion.input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setInputFocus({ ...inputFocus, password: true })}
+                  onBlur={() => setInputFocus({ ...inputFocus, password: false })}
+                  className={inputFocus.password ? 'input-glow' : ''}
+                />
+                <span className="password-toggle-btn" onClick={toggleShowPassword}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="eye-icon" viewBox="0 0 24 24" fill="none" stroke="#00ff00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {showPassword ? (
+                      <>
+                        <path d="M17.94 17.94 6.06 6.06" />
+                        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                      </>
+                    ) : (
+                      <>
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                      </>
+                    )}
+                  </svg>
+                </span>
+              </motion.div>
+
+              <motion.button type="submit" className="btn-glow" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                 LOGIN
               </motion.button>
             </motion.form>
@@ -162,12 +175,7 @@ const Login = ({ switchToSignup }) => {
                 autoFocus
                 className="input-glow"
               />
-              <motion.button
-                type="submit"
-                className="btn-glow"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.button type="submit" className="btn-glow" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
                 Send Reset Link
               </motion.button>
               <motion.button
@@ -188,34 +196,17 @@ const Login = ({ switchToSignup }) => {
         </AnimatePresence>
 
         {!forgotMode && (
-          <motion.p
-            className="switch-text"
-            style={{ opacity: hovered ? 1 : 0.3, marginTop: '18px' }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.p className="switch-text" style={{ opacity: hovered ? 1 : 0.3, marginTop: '18px' }} transition={{ duration: 0.3 }}>
             Forgot your password?{' '}
-            <span
-              onClick={() => {
-                setForgotMode(true);
-                setError('');
-              }}
-              style={{ cursor: 'pointer', color: '#33ff33', textDecoration: 'underline' }}
-            >
+            <span onClick={() => { setForgotMode(true); setError(''); }} style={{ cursor: 'pointer', color: '#33ff33', textDecoration: 'underline' }}>
               Reset here
             </span>
           </motion.p>
         )}
 
-        <motion.p
-          className="switch-text"
-          style={{ opacity: hovered ? 1 : 0.3, marginTop: '12px' }}
-          transition={{ duration: 0.3 }}
-        >
+        <motion.p className="switch-text" style={{ opacity: hovered ? 1 : 0.3, marginTop: '12px' }} transition={{ duration: 0.3 }}>
           Don’t have an account?{' '}
-          <span
-            onClick={switchToSignup}
-            style={{ cursor: 'pointer', color: '#33ff33', textDecoration: 'underline' }}
-          >
+          <span onClick={switchToSignup} style={{ cursor: 'pointer', color: '#33ff33', textDecoration: 'underline' }}>
             Sign up
           </span>
         </motion.p>
