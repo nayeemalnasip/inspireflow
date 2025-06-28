@@ -1,0 +1,136 @@
+.about-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a1a2b, #0d0f1a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: 'Share Tech Mono', monospace;
+  color: #b3d9ff;
+}
+
+.about-card {
+  background: rgba(0, 20, 40, 0.9);
+  padding: 36px 32px;
+  border-radius: 20px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow:
+    0 0 30px rgba(51, 204, 255, 0.85),
+    inset 0 0 40px rgba(0, 255, 255, 0.12);
+  text-align: center;
+  user-select: text;
+  transition: box-shadow 0.4s ease;
+}
+
+.about-card:hover {
+  box-shadow:
+    0 0 50px rgba(51, 204, 255, 1),
+    inset 0 0 60px rgba(0, 255, 255, 0.2);
+}
+
+.about-card h1 {
+  font-size: 2.8rem;
+  margin-bottom: 28px;
+  color: #00ffff;
+  text-shadow:
+    0 0 12px #00ffffcc,
+    0 0 28px #33ccffff;
+}
+
+.typing-paragraph {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  max-width: 100%;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  min-height: 160px;
+  letter-spacing: 0.02em;
+  padding-right: 5px;
+  font-weight: 500;
+  color: #aaddffdd;
+  user-select: text;
+}
+
+.typing-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.6em;
+  background-color: #00ffff;
+  margin-left: 3px;
+  animation: blinkCaret 1s step-start infinite;
+  vertical-align: bottom;
+}
+
+@keyframes blinkCaret {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 14px 38px;
+  background-color: #33ccff;
+  color: #00111a;
+  font-weight: 700;
+  border-radius: 16px;
+  text-decoration: none;
+  box-shadow: 0 0 28px #33ccffdd;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.04em;
+  user-select: none;
+  cursor: pointer;
+}
+
+.back-btn:hover,
+.back-btn:focus {
+  background-color: #00aaff;
+  box-shadow: 0 0 40px #00aaffdd;
+  outline: none;
+}
+
+@media (max-width: 720px) {
+  .about-card {
+    padding: 28px 24px;
+  }
+
+  .about-card h1 {
+    font-size: 2.1rem;
+    margin-bottom: 24px;
+  }
+
+  .typing-paragraph {
+    font-size: 1.1rem;
+    min-height: 130px;
+  }
+
+  .back-btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .about-card {
+    padding: 20px 16px;
+  }
+
+  .about-card h1 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .typing-paragraph {
+    font-size: 1rem;
+    min-height: 110px;
+  }
+
+  .back-btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+}

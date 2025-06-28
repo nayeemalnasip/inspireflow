@@ -1,0 +1,71 @@
+/* Body with smooth dark gradient and subtle animation */
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f111a 0%, #001100 100%);
+  color: #33ff33;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 16px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  /* subtle animated background for extra depth */
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+}
+
+/* Animate background gradient to slowly shift */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-container {
+  min-height: 100vh;
+  background: radial-gradient(
+    ellipse at center,
+    #010101 0%,
+    #000c04 70%,
+    #000000 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow:
+    inset 0 0 40px #003300aa,
+    0 0 80px #00770055;
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Text glow effect for body text */
+body, .bg-container {
+  text-shadow:
+    0 0 4px #33ff33aa,
+    0 0 12px #33ff3377;
+}
+
+/* Responsive text size for smaller screens */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .bg-container {
+    padding: 15px;
+    border-radius: 16px;
+  }
+}
