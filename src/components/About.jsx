@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './About.css';
 
 const About = () => {
-  const fullText = `Hello! I am Nayeem AL Nasip, an IT professional passionate about cybersecurity, ethical hacking, and secure web development.
+  const fullText = `Hello! I’m Nayeem AL Nasip, an IT professional with a passion for cybersecurity, ethical hacking, and secure web development.
 
-This app is my personal companion on a journey of discipline, focus, and growth. It helps me stay motivated, track daily progress, and build habits that lead to success.
+This app serves as my personal companion on a journey fueled by discipline, focus, and growth. It keeps me motivated, helps me track daily progress, and build habits that pave the way to success.
 
-By using this app, you too can turn your goals into actionable steps and embrace continuous self-improvement.
+By using this app, you can transform your goals into actionable steps and embrace a path of continuous self-improvement.
 
-Let's grow together!`;
+Let’s grow and succeed together!`;
 
   const [displayedText, setDisplayedText] = useState('');
   const typingSpeed = 40; // ms per character
