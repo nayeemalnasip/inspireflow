@@ -1,6 +1,8 @@
+// Dashboard.js
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 import './Dashboard.css';
+import { AuthContext } from '../context/AuthContext';
 
 const defaultTasks = [
   { id: 1, task: 'Complete project milestones', done: false },
@@ -110,13 +112,11 @@ const Dashboard = () => {
         </div>
 
         <div className="dashboard-header">
-          <nav>
-            <a href="/about" className="profile-nav" title="About Me">
-              &#9432;
-            </a>
-          </nav>
           <h1>Welcome, {displayName}</h1>
           <button onClick={logout} className="logout-btn">Logout</button>
+          <Link to="/about" className="profile-icon">
+            <i className="fas fa-info-circle"></i>
+          </Link>
         </div>
 
         <h2>Your Daily Tasks</h2>

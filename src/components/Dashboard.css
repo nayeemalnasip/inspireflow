@@ -252,7 +252,6 @@ body {
   outline-offset: 2px;
 }
 
-/* Delete Button */
 .delete-btn {
   background: transparent;
   border: none;
@@ -332,7 +331,6 @@ body {
   background-color: #005577;
 }
 
-/* Responsive */
 @media screen and (max-width: 600px) {
   body {
     padding-top: 20px;
@@ -413,4 +411,34 @@ body {
     margin-bottom: 15px;
     text-align: center;
   }
+}
+
+.profile-icon {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #33ccff;
+  transition: color 0.3s;
+}
+
+.profile-icon:hover {
+  color: #00aaff;
+}
+
+.profile-details {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+  color: #b3e0ff;
+  box-shadow: 0 0 10px #33ccff;
+}
+
+.profile-details p {
+  margin: 5px 0;
+  font-size: 1.1rem;
+}
+
+.profile-details h2 {
+  font-size: 1.5rem;
+  color: #33ccff;
 }

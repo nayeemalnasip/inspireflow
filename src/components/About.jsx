@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './About.css';
 
 const About = () => {
@@ -34,9 +35,9 @@ Let's grow together!`;
           {displayedText}
           {displayedText.length < fullText.length && <span className="typing-caret" />}
         </p>
-        <a href="/" className="back-btn" aria-label="Back to Dashboard">
+        <Link to="/" className="back-btn" aria-label="Back to Dashboard">
           ← Back to Dashboard
-        </a>
+        </Link>
       </div>
     </div>
   );

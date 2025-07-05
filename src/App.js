@@ -1,11 +1,14 @@
+// src/App.js
+
 import React, { useContext, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthContext, AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
-import About from './components/About';
+import About from './components/About';  // Add About Component
 import { updateProfile } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 function AppContent() {
   const { user, login, signup } = useContext(AuthContext);
@@ -15,14 +18,15 @@ function AppContent() {
 
   useEffect(() => {
     if (user) {
-      navigate('/'); // Redirect to Dashboard when logged in
+      navigate('/');  // Redirect to Dashboard when logged in
     }
-  }, [user, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleLogin = async (email, password) => {
     const success = await login(email, password);
     if (success) {
-      navigate('/');
+      navigate('/');  // Navigate to Dashboard after login
     } else {
       setError('Invalid email or password');
     }
@@ -34,12 +38,13 @@ function AppContent() {
       await updateProfile(result.user, {
         displayName: fullName,
       });
-      navigate('/');
+      navigate('/');  // Navigate to Dashboard after signup
     } else {
       setError('Signup failed. Please try again');
     }
   };
 
+  // If user is not logged in, show login/signup forms
   if (!user) {
     return isSignup ? (
       <Signup
@@ -59,7 +64,7 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/about" element={<About />} />
+      <Route path="/about" element={<About />} />  {/* About page route */}
     </Routes>
   );
 }
