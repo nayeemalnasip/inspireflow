@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/inspireflow/static/css/main.f5b4707b.css",
-    "main.js": "/inspireflow/static/js/main.710a1187.js",
+    "main.js": "/inspireflow/static/js/main.43ef44cb.js",
     "static/js/453.a72ba988.chunk.js": "/inspireflow/static/js/453.a72ba988.chunk.js",
     "index.html": "/inspireflow/index.html",
     "main.f5b4707b.css.map": "/inspireflow/static/css/main.f5b4707b.css.map",
-    "main.710a1187.js.map": "/inspireflow/static/js/main.710a1187.js.map",
+    "main.43ef44cb.js.map": "/inspireflow/static/js/main.43ef44cb.js.map",
     "453.a72ba988.chunk.js.map": "/inspireflow/static/js/453.a72ba988.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f5b4707b.css",
-    "static/js/main.710a1187.js"
+    "static/js/main.43ef44cb.js"
   ]
 }
