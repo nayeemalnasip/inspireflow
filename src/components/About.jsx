@@ -5,7 +5,7 @@ import './About.css';
 const About = () => {
   const fullText = `Hello! I’m Nayeem AL Nasip, an IT professional with a passion for cybersecurity, ethical hacking, and secure web development.
 
-This app serves as my personal companion on a journey fueled by discipline, focus, and growth. It keeps me motivated, helps me track daily progress, and build habits that pave the way to success.
+This app serves as my personal companion on a journey fueled by discipline, focus and growth. It keeps me motivated, helps me track daily progress and build habits that pave the way to success.
 
 By using this app, you can transform your goals into actionable steps and embrace a path of continuous self-improvement.
 
