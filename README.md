@@ -68,3 +68,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+# InspireFlow
+
+A futuristic self-motivation dashboard for managing daily tasks with a point tracking system.
+
+**Live Preview:**  
+https://nayeemalnasip.github.io/inspireflow
