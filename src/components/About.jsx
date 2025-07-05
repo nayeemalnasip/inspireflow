@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './About.css';
 
 const About = () => {
-  const fullText = `Hello! I’m Nayeem AL Nasip, an IT professional with a passion for cybersecurity, ethical hacking, and secure web development.
+  const fullText = `Hello! I’m Nayeem AL Nasip, an IT professional with a passion for cybersecurity, ethical hacking and secure web development.
 
 This app serves as my personal companion on a journey fueled by discipline, focus and growth. It keeps me motivated, helps me track daily progress and build habits that pave the way to success.
 
